@@ -1,18 +1,36 @@
 from icalendar import Calendar, Event
 import dateutil.parser
+import requests
+from flask import current_app
 
 
-def load_groupme_json():
-    return {}
+def load_groupme_json(app, groupme_api_key, groupme_group_id):
+    url = 'https://api.groupme.com/v3/conversations/{groupme_group_id}/events/list'.format(groupme_group_id=groupme_group_id)
+    headers = {'X-Access-Token': groupme_api_key}
+
+    response = requests.get(url, headers=headers)
+    if response.status_code != 200:
+        current_app.groupme_load_successfully = False
+        current_app.groupme_calendar_json_cache = {}
+        app.logger.error('{}: {}'.format(response.status_code, response.text))
+        return False
+
+    current_app.groupme_load_successfully = True
+    current_app.groupme_calendar_json_cache = response.json()
+    return True
 
 
-def groupme_json_to_ics(groupme_json):
+def groupme_json_to_ics(groupme_json, static_name=None):
     cal = Calendar()
     cal['prodid'] = '-//Andrew Mussey//GroupMe-to-ICS 0.1//EN'
     cal['version'] = '2.0'
     cal['calscale'] = 'GREGORIAN'
     cal['method'] = 'PUBLISH'
-    cal['x-wr-calname'] = 'GroupMe Test'
+    if static_name:
+        cal['x-wr-calname'] = 'GroupMe: {}'.format(static_name)
+    else:
+        # Load the name of the calendar from another API call.
+        cal['x-wr-calname'] = 'GroupMe: Test Calendar'
     cal['x-wr-timezone'] = 'America/Los_Angeles'
 
     for json_blob in groupme_json['response']['events']:
@@ -53,5 +71,21 @@ def groupme_json_to_ics(groupme_json):
         if json_blob.get('updated_at'):
             event['last-modified'] = dateutil.parser.parse(json_blob.get('updated_at'))
         cal.add_component(event)
+
+    return cal.to_ical()
+
+
+def groupme_ics_error(error_text, static_name=None):
+    cal = Calendar()
+    cal['prodid'] = '-//Andrew Mussey//GroupMe-to-ICS 0.1//EN'
+    cal['version'] = '2.0'
+    cal['calscale'] = 'GREGORIAN'
+    cal['method'] = 'PUBLISH'
+    if static_name:
+        cal['x-wr-calname'] = 'GroupMe: {} ({})'.format(static_name, error_text)
+    else:
+        # Load the name of the calendar from another API call.
+        cal['x-wr-calname'] = 'GroupMe ERROR: {}'.format(error_text)
+    cal['x-wr-timezone'] = 'America/Los_Angeles'
 
     return cal.to_ical()
