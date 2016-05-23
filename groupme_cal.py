@@ -1,10 +1,16 @@
 from flask import Flask, current_app, Response
 import os
+import sys
 import datetime
 
 import utils
 
 app = Flask(__name__)
+with app.app_context():
+    current_app.groupme_calendar_name = 'GroupMe Calendar'
+    if os.environ.get('GROUPME_STATIC_NAME', None):
+        if os.environ.get('GROUPME_STATIC_NAME', None) != "":
+            current_app.groupme_calendar_name = os.environ.get('GROUPME_STATIC_NAME', None)
 
 
 @app.route('/')
@@ -23,7 +29,7 @@ def index():
         successfully_load_json = utils.load_groupme_json(app=app, groupme_api_key=groupme_api_key, groupme_group_id=groupme_group_id)
         if not successfully_load_json:
             return 'There was a critical error loading the GroupMe Calendar.  Please investigate.'
-        current_app.ics_cache = utils.groupme_json_to_ics(groupme_json=current_app.groupme_calendar_json_cache, static_name=os.environ.get('GROUPME_STATIC_NAME', None))
+        current_app.ics_cache = utils.groupme_json_to_ics(groupme_json=current_app.groupme_calendar_json_cache)
         current_app.last_cache = datetime.datetime.now()
 
     # Return a template, but also some basic info about the latest cache time.
@@ -42,14 +48,14 @@ def full_ics():
         groupme_api_key = os.environ.get('GROUPME_API_KEY', None)
         groupme_group_id = os.environ.get('GROUPME_GROUP_ID', None)
         if not groupme_api_key:
-            return utils.groupme_ics_error(error_text='GROUPME_API_KEY not set', static_name=os.environ.get('GROUPME_STATIC_NAME', None))
+            return utils.groupme_ics_error(error_text='GROUPME_API_KEY not set')
         if not groupme_group_id:
-            return utils.groupme_ics_error(error_text='GROUPME_GROUP_ID not set', static_name=os.environ.get('GROUPME_STATIC_NAME', None))
+            return utils.groupme_ics_error(error_text='GROUPME_GROUP_ID not set')
 
         successfully_load_json = utils.load_groupme_json(app=app, groupme_api_key=groupme_api_key, groupme_group_id=groupme_group_id)
         if not successfully_load_json:
-            return utils.groupme_ics_error(error_text='critical error loading calendar', static_name=os.environ.get('GROUPME_STATIC_NAME', None))
-        current_app.ics_cache = utils.groupme_json_to_ics(groupme_json=current_app.groupme_calendar_json_cache, static_name=os.environ.get('GROUPME_STATIC_NAME', None))
+            return utils.groupme_ics_error(error_text='critical error loading calendar')
+        current_app.ics_cache = utils.groupme_json_to_ics(groupme_json=current_app.groupme_calendar_json_cache)
         current_app.last_cache = datetime.datetime.now()
 
     return Response(getattr(current_app, 'ics_cache', None), mimetype='text/calendar', headers={'Content-Disposition': 'attachment'})

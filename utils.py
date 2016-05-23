@@ -5,15 +5,21 @@ from flask import current_app
 
 
 def load_groupme_json(app, groupme_api_key, groupme_group_id):
-    url = 'https://api.groupme.com/v3/conversations/{groupme_group_id}/events/list'.format(groupme_group_id=groupme_group_id)
+    url_group_info = 'https://api.groupme.com/v3/groups/{groupme_group_id}'.format(groupme_group_id=groupme_group_id)
+    url_calendar = 'https://api.groupme.com/v3/conversations/{groupme_group_id}/events/list'.format(groupme_group_id=groupme_group_id)
     headers = {'X-Access-Token': groupme_api_key}
 
-    response = requests.get(url, headers=headers)
+    response = requests.get(url_calendar, headers=headers)
     if response.status_code != 200:
         current_app.groupme_load_successfully = False
         current_app.groupme_calendar_json_cache = {}
         app.logger.error('{}: {}'.format(response.status_code, response.text))
         return False
+
+    response = requests.get(url_group_info, headers=headers)
+    if response.status_code == 200:
+        if response.json().get('response', {}).get('name', None):
+            current_app.groupme_calendar_name = response.json().get('response', {}).get('name')
 
     current_app.groupme_load_successfully = True
     current_app.groupme_calendar_json_cache = response.json()
@@ -26,11 +32,7 @@ def groupme_json_to_ics(groupme_json, static_name=None):
     cal['version'] = '2.0'
     cal['calscale'] = 'GREGORIAN'
     cal['method'] = 'PUBLISH'
-    if static_name:
-        cal['x-wr-calname'] = 'GroupMe: {}'.format(static_name)
-    else:
-        # Load the name of the calendar from another API call.
-        cal['x-wr-calname'] = 'GroupMe: Test Calendar'
+    cal['x-wr-calname'] = 'GroupMe: {}'.format(current_app.groupme_calendar_name)
     cal['x-wr-timezone'] = 'America/Los_Angeles'
 
     for json_blob in groupme_json['response']['events']:
@@ -81,11 +83,7 @@ def groupme_ics_error(error_text, static_name=None):
     cal['version'] = '2.0'
     cal['calscale'] = 'GREGORIAN'
     cal['method'] = 'PUBLISH'
-    if static_name:
-        cal['x-wr-calname'] = 'GroupMe: {} ({})'.format(static_name, error_text)
-    else:
-        # Load the name of the calendar from another API call.
-        cal['x-wr-calname'] = 'GroupMe ERROR: {}'.format(error_text)
+    cal['x-wr-calname'] = 'GroupMe: {} ({})'.format(current_app.groupme_calendar_name, error_text)
     cal['x-wr-timezone'] = 'America/Los_Angeles'
 
     return cal.to_ical()
