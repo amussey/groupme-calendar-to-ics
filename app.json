@@ -26,6 +26,10 @@
         "CACHE_DURATION": {
             "description": "The duration for which the GroupMe calendar is cached, measured in minutes.  `0` will disable caching.",
             "value": "60"
+        },
+        "GROUPME_PROXY_URL": {
+            "description": "(Optional) A proxy URL to provide for the calendar.ics. ",
+            "value": ""
         }
     },
     "addons": [],

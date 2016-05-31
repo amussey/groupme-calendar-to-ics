@@ -37,9 +37,11 @@ def index():
     else:
         print('Cache hit.  Time remaining: {}'.format(datetime.timedelta(minutes=cache_duration) - (datetime.datetime.now() - last_cache)))
 
-    ics_url = os.environ.get('CACHE_DURATION', 60)
+    ics_url = os.environ.get('GROUPME_PROXY_URL', None)
     if not ics_url:
         ics_url = request.url + '/calendar.ics'
+        if request.url[-1] == '/':
+            ics_url = request.url + 'calendar.ics'
 
     ics_url_http, ics_url_webcal, ics_url_google = utils.build_ics_urls(ics_url)
 
