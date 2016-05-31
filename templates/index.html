@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <style>
+    body {
+        background-color: #f3f3f3;
+    }
+
+    h1 {
+        font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 60px;
+        text-align: center;
+        text-shadow: 0px 2px 2px rgba(150, 150, 150, 1);
+        margin-bottom: 25px;
+    }
+    .container {
+        max-width: 720px;
+    }
+
+    .calendar-links {
+        text-align: center;
+        font-size: 24px;
+    }
+
+    .calendar-links i.cal-icon-desktop{
+        font-size: 57px;
+    }
+
+    .calendar-links-row {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+    .calendar-links a {
+        text-shadow: 0px 1px 2px rgba(150, 150, 150, 0.5);
+    }
+
+    a {
+        color: rgb(86, 86, 79);
+        font-weight: bold;
+    }
+
+    a:hover {
+        text-decoration: none;
+    }
+
+    /* Portrait phones and smaller */
+    @media (max-width: 767px) {
+        .calendar-links {
+            height: 45px;
+            line-height: 0px;
+        }
+    }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>{{title}} Calendar</h1>
+    <div class="row">
+        <div class="col-sm-12" >Add the the calendar for the GroupMe group <a href="https://web.groupme.com/chats/{{group_id}}"><b>{{title}}</b></a> to your calendar:</div>
+    </div>
+    <div class="row calendar-links-row">
+        <div class="col-sm-6 calendar-links">
+            <a href="{{ ics_url_google }}">
+                <i class="fa fa-google cal-icon-desktop hidden-xs" aria-hidden="true"></i><br>
+                <i class="fa fa-google hidden-sm hidden-md hidden-lg hidden-xl" aria-hidden="true">&nbsp;&nbsp;</i>
+                Google Calendar
+            </a>
+        </div>
+        <div class="col-sm-6 calendar-links">
+            <a href="{{ ics_url_webcal }}">
+                <i class="fa fa-apple cal-icon-desktop hidden-xs" aria-hidden="true"></i><br>
+                <i class="fa fa-apple hidden-sm hidden-md hidden-lg hidden-xl" aria-hidden="true">&nbsp;&nbsp;</i>
+                iCal/Outlook/Other
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12" >The calendar can also be accessed directly over both <code>http</code> and <code>webcal</code>:</div>
+    </div>
+
+    <div class="row calendar-links-row">
+        <div class="col-sm-6 calendar-links">
+            <a href="{{ ics_url_http }}">
+                <i class="fa fa-arrow-circle-o-down cal-icon-desktop hidden-xs" aria-hidden="true"></i><br>
+                <i class="fa fa-arrow-circle-o-down hidden-sm hidden-md hidden-lg hidden-xl" aria-hidden="true">&nbsp;&nbsp;</i>
+                calendar.ics
+            </a>
+        </div>
+        <div class="col-sm-6 calendar-links">
+            <a href="{{ ics_url_webcal }}">
+                <i class="fa fa-calendar-o cal-icon-desktop hidden-xs" aria-hidden="true"></i><br>
+                <i class="fa fa-calendar-o hidden-sm hidden-md hidden-lg hidden-xl" aria-hidden="true">&nbsp;&nbsp;</i>
+                Webcal
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            Want a calendar feed for your GroupMe group?  Grab the script on <a href="https://github.com/amussey/groupme-calendar-to-ics"><i class="fa fa-github"  aria-hidden="true"></i> Github here</a>.<br>
+            Created by <a href="https://amussey.com">Andrew Mussey</a>.
+        </div>
+    </div>
+
+
+
+
+</div>
+    
+</body>
+</html>

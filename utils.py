@@ -1,7 +1,20 @@
 from icalendar import Calendar, Event
+from flask import Response
 import dateutil.parser
 import requests
 from flask import current_app
+
+
+def return_ics_Response(response_body):
+    return Response(
+        response_body,
+        mimetype='text/calendar',
+        headers={'Content-Disposition': 'attachment'}
+    )
+
+
+def build_ics_urls(ics_url):
+    return '', '', ''
 
 
 def load_groupme_json(app, groupme_api_key, groupme_group_id):
@@ -16,13 +29,14 @@ def load_groupme_json(app, groupme_api_key, groupme_group_id):
         app.logger.error('{}: {}'.format(response.status_code, response.text))
         return False
 
+    current_app.groupme_calendar_json_cache = response.json()
+
     response = requests.get(url_group_info, headers=headers)
     if response.status_code == 200:
         if response.json().get('response', {}).get('name', None):
             current_app.groupme_calendar_name = response.json().get('response', {}).get('name')
 
     current_app.groupme_load_successfully = True
-    current_app.groupme_calendar_json_cache = response.json()
     return True
 
 
