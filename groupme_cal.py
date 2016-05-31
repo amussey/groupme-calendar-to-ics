@@ -91,5 +91,10 @@ def recent_ics():
     return 'Soon!'
 
 
+@app.route('/robots.txt')
+def robots():
+    return 'User-agent: *\nDisallow: /'
+
+
 if __name__ == "__main__":
     app.run(debug=True)

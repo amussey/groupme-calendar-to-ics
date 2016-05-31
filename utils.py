@@ -29,7 +29,7 @@ def build_ics_urls(ics_url):
 
     parsed_google_url = list(urlparse.urlparse(google_calendar_url_base))
     parsed_google_url[4] = dict(urlparse.parse_qsl(parsed_google_url[4]))
-    parsed_google_url[4]['cid'] = ics_url_http
+    parsed_google_url[4]['cid'] = ics_url_webcal
     parsed_google_url[4] = urllib.urlencode(parsed_google_url[4])
     ics_url_google = urlparse.urlunparse(parsed_google_url)
 
