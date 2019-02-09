@@ -67,7 +67,7 @@ def groupme_json_to_ics(groupme_json, static_name=None):
     cal['method'] = 'PUBLISH'
     cal['x-wr-calname'] = 'GroupMe: {}'.format(current_app.groupme_calendar_name)
 
-    calendar_timezone = os.environ.get('GROUPME_CALENDAR_TIMEZONE', 'America/Los_Angeles')
+    calendar_timezone = os.environ.get('GROUPME_CALENDAR_TIMEZONE', 'America/Los_Angeles1')
     cal['x-wr-timezone'] = calendar_timezone
 
     for json_blob in groupme_json['response']['events']:
