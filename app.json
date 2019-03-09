@@ -23,6 +23,10 @@
             "description": "The duration for which the GroupMe calendar is cached, measured in minutes.  `0` will disable caching.",
             "value": "60"
         },
+        "GROUPME_CALENDAR_TIMEZONE": {
+            "description": "Timezone of the calendar events.  See https://en.wikipedia.org/wiki/List_of_tz_database_time_zones for the list of valid timezones.",
+            "value": "America/Los_Angeles"
+        },
         "GROUPME_STATIC_NAME": {
             "description": "(Optional) A static name for the group.  This will lock a name for the calendar, even if the group decides to change their name.",
             "value": "",

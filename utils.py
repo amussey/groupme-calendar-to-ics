@@ -66,7 +66,7 @@ def groupme_json_to_ics(groupme_json, static_name=None):
     cal['calscale'] = 'GREGORIAN'
     cal['method'] = 'PUBLISH'
     cal['x-wr-calname'] = 'GroupMe: {}'.format(current_app.groupme_calendar_name)
-    cal['x-wr-timezone'] = 'America/Los_Angeles'
+    cal['x-wr-timezone'] = current_app.calendar_timezone
 
     for json_blob in groupme_json['response']['events']:
         if 'deleted_at' not in json_blob:

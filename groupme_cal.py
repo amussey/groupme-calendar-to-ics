@@ -6,6 +6,7 @@ import utils
 
 app = Flask(__name__)
 with app.app_context():
+    current_app.calendar_timezone = os.environ.get('GROUPME_CALENDAR_TIMEZONE', 'America/Los_Angeles')
     current_app.groupme_calendar_name = 'GroupMe Calendar'
     if os.environ.get('GROUPME_STATIC_NAME', None):
         if os.environ.get('GROUPME_STATIC_NAME', None) != "":
@@ -51,6 +52,7 @@ def index():
         'ics_url_http': ics_url_http,
         'ics_url_webcal': ics_url_webcal,
         'ics_url_google': ics_url_google,
+        'calendar_timezone': current_app.calendar_timezone,
     }
 
     # Return a template, but also some basic info about the latest cache time.
