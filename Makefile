@@ -13,7 +13,7 @@ virtualenv:  ## Build the python virtual environment.
 	     virtualenv $(PYTHON_ENV) ; \
 	fi
 	@source $(PYTHON_ENV)/bin/activate ; \
-	pip install -q -r $(PYTHON_REQUIREMENTS)
+	pip install -r $(PYTHON_REQUIREMENTS)
 
 
 .PHONY: run
